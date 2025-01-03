@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { useGitHubStore } from '@/stores'
-
-const store = useGitHubStore()
+import InstallationList from '@/components/InstallationList.vue'
+import InstallationCreate from '@/components/InstallationCreate.vue'
 </script>
 
 <template>
@@ -22,17 +21,8 @@ const store = useGitHubStore()
               </h1>
             </header>
             <div class="mt-16 sm:mt-20">
-              <a
-                class="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                :href="
-                  'https://github.com/apps/Patrehub/installations/new?state=abc&return_to=' +
-                  encodeURIComponent(
-                    'http://localhost:5173/auth/github/callback',
-                  )
-                "
-              >
-                Install Github App
-              </a>
+              <InstallationList />
+              <InstallationCreate />
             </div>
           </div>
         </div>
