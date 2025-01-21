@@ -7,16 +7,46 @@ import Header from '@/components/Header.vue'
   <div class="fixed inset-0 flex justify-center sm:px-8">
     <div class="flex w-full max-w-7xl lg:px-8">
       <div
-        class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"
-      ></div>
+        class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20 relative"
+      >
+        <div
+          class="h-[100dvh] w-[15%] right-[calc(100%+1px)] absolute bg-gradient-to-l from-zinc-800/90"
+        >
+          <div
+            class="w-full h-full absolute top-0 left-0 backdrop-blur-sm"
+            :style="{
+              backgroundColor: 'transparent',
+              backgroundImage: 'radial-gradient(transparent 1px, black 1px)',
+              backgroundSize: '4px 4px',
+              maskImage:
+                'linear-gradient(to left, black 60%, transparent 100%)',
+            }"
+          ></div>
+        </div>
+        <div
+          class="h-[100dvh] w-[15%] left-[calc(100%+1px)] absolute bg-gradient-to-r from-zinc-800/90"
+        >
+          <div
+            class="w-full h-full absolute top-0 left-0 backdrop-blur-sm"
+            :style="{
+              backgroundColor: 'transparent',
+              backgroundImage: 'radial-gradient(transparent 1px, black 1px)',
+              backgroundSize: '4px 4px',
+              maskImage:
+                'linear-gradient(to right, black 60%, transparent 100%)',
+            }"
+          ></div>
+        </div>
+      </div>
     </div>
   </div>
+
   <div class="relative flex w-full flex-col">
     <Header />
     <main class="flex-auto">
       <RouterView />
       <!-- 
-       -->
+        -->
     </main>
     <footer class="mt-32 flex-none">
       <div class="sm:px-8">
