@@ -172,7 +172,7 @@ export interface Campaign {
      * @type {Array<Benefit>}
      * @memberof Campaign
      */
-    benefits: Array<Benefit>;
+    benefits?: Array<Benefit>;
     /**
      * 
      * @type {User}
@@ -184,7 +184,7 @@ export interface Campaign {
      * @type {Array<Tier>}
      * @memberof Campaign
      */
-    tiers: Array<Tier>;
+    tiers?: Array<Tier>;
 }
 
 /**
@@ -210,8 +210,6 @@ export function instanceOfCampaign(value: object): value is Campaign {
     if (!('summary' in value) || value['summary'] === undefined) return false;
     if (!('url' in value) || value['url'] === undefined) return false;
     if (!('vanity' in value) || value['vanity'] === undefined) return false;
-    if (!('benefits' in value) || value['benefits'] === undefined) return false;
-    if (!('tiers' in value) || value['tiers'] === undefined) return false;
     return true;
 }
 
@@ -246,9 +244,9 @@ export function CampaignFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'summary': json['summary'],
         'url': json['url'],
         'vanity': json['vanity'],
-        'benefits': ((json['benefits'] as Array<any>).map(BenefitFromJSON)),
+        'benefits': json['benefits'] == null ? undefined : ((json['benefits'] as Array<any>).map(BenefitFromJSON)),
         'createor': json['createor'] == null ? undefined : UserFromJSON(json['createor']),
-        'tiers': ((json['tiers'] as Array<any>).map(TierFromJSON)),
+        'tiers': json['tiers'] == null ? undefined : ((json['tiers'] as Array<any>).map(TierFromJSON)),
     };
 }
 
@@ -284,9 +282,9 @@ export function CampaignToJSONTyped(value?: Campaign | null, ignoreDiscriminator
         'summary': value['summary'],
         'url': value['url'],
         'vanity': value['vanity'],
-        'benefits': ((value['benefits'] as Array<any>).map(BenefitToJSON)),
+        'benefits': value['benefits'] == null ? undefined : ((value['benefits'] as Array<any>).map(BenefitToJSON)),
         'createor': UserToJSON(value['createor']),
-        'tiers': ((value['tiers'] as Array<any>).map(TierToJSON)),
+        'tiers': value['tiers'] == null ? undefined : ((value['tiers'] as Array<any>).map(TierToJSON)),
     };
 }
 
