@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="mt-9 sm:px-8">
+  <div class="mt-12 sm:px-8">
     <div class="mx-auto w-full max-w-7xl lg:px-8">
       <div class="relative px-4 sm:px-8 lg:px-12">
         <div class="mx-auto max-w-2xl lg:max-w-5xl">
@@ -11,7 +11,7 @@
             >
               Patreon x GitHub Benefit
             </h1>
-            <p class="mt-6 text-base text-zinc-600 dark:text-zinc-400">
+            <p class="mt-4 text-base text-zinc-600 dark:text-zinc-400">
               Are you Patreon Creator and want to give your supporters access to
               your GitHub repositories? This is the right place for you.
             </p>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAuthStore, useGitHubStore } from '@/stores'
 import { LinkIcon } from '@heroicons/vue/24/solid'
+import FollowingList from '@/components/FollowingList.vue'
 
 const store = useGitHubStore()
 
@@ -9,7 +10,7 @@ const authStore = useAuthStore()
 
 <template>
   <main class="flex-auto">
-    <div class="mt-16 sm:mt-32 sm:px-8">
+    <div class="mt-12 sm:px-8">
       <div class="mx-auto w-full max-w-7xl lg:px-8">
         <div class="relative px-4 sm:px-8 lg:px-12">
           <div class="mx-auto max-w-2xl lg:max-w-5xl">
@@ -19,7 +20,7 @@ const authStore = useAuthStore()
               >
                 PatreHub Dashboard
               </h1>
-              <p class="mt-2 text-base text-zinc-600 dark:text-zinc-400">
+              <p class="mt-4 text-base text-zinc-600 dark:text-zinc-400">
                 Welcome back {{ authStore.user.first_name }}!
               </p>
             </header>
@@ -50,7 +51,7 @@ const authStore = useAuthStore()
                     class="relative mx-1 w-28 border border-dashed border-zinc-400 ring-2 ring-zinc-950"
                   >
                     <div
-                      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border-t-2 border-t-zinc-700 bg-linear-to-b from-zinc-800 to-[hsl(240,_6%,_10%)] p-2 ring-2 ring-zinc-950"
+                      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border-t-2 border-t-zinc-700 bg-linear-to-b from-zinc-800 to-[hsl(240,_6%,_10%)] p-2 ring-2 shadow-lg shadow-zinc-950 ring-zinc-950"
                     >
                       <LinkIcon class="size-6" />
                     </div>
@@ -66,7 +67,7 @@ const authStore = useAuthStore()
                 <div class="relative mt-4 flex flex-col gap-6">
                   <div class="flex items-center justify-center gap-2">
                     <button
-                      class="flex cursor-pointer items-center rounded-[7px] border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide text-blue-50 ring-1 shadow-inner ring-zinc-950 transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.35)] hover:border-t-blue-300 hover:from-blue-500 hover:to-blue-700 hover:text-white active:border-t-blue-950 active:shadow-black/80"
+                      class="flex cursor-pointer items-center rounded-[7px] border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide text-blue-50 inset-shadow-sm ring-1 ring-zinc-950 transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.35)] hover:border-t-blue-300 hover:from-blue-500 hover:to-blue-700 hover:text-white active:border-t-blue-950 active:from-blue-800 active:to-blue-800 active:inset-shadow-black/50"
                       @click="store.connect()"
                     >
                       Connect GitHub
@@ -79,6 +80,20 @@ const authStore = useAuthStore()
                   </div>
                 </div>
               </div>
+            </div>
+
+            <!-- need a loading state on the table -->
+            <div class="mt-12">
+              <h1
+                class="text-2xl font-bold tracking-tight text-zinc-800 sm:text-3xl dark:text-zinc-100"
+              >
+                Memberships
+              </h1>
+              <p class="mt-2 mb-4 text-sm text-zinc-600 dark:text-zinc-400">
+                Here are the creators you support on Patreon
+              </p>
+
+              <FollowingList />
             </div>
           </div>
         </div>

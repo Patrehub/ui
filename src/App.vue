@@ -7,15 +7,14 @@ import Header from '@/components/Header.vue'
   <div class="fixed inset-0 flex justify-center sm:px-8">
     <div class="flex w-full max-w-7xl lg:px-8">
       <div
-        class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20 relative"
+        class="relative w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"
       >
         <div
-          class="h-[100dvh] w-[15%] right-[calc(100%+1px)] absolute bg-linear-to-l from-zinc-800/90"
+          class="absolute right-[calc(100%+1px)] h-[100dvh] w-[15%] bg-linear-to-l dark:from-zinc-800/90"
         >
           <div
-            class="w-full h-full absolute top-0 left-0 backdrop-blur-xs"
+            class="absolute top-0 left-0 h-full w-full backdrop-blur-xs"
             :style="{
-              backgroundColor: 'transparent',
               backgroundImage: 'radial-gradient(transparent 1px, black 1px)',
               backgroundSize: '4px 4px',
               maskImage:
@@ -24,12 +23,11 @@ import Header from '@/components/Header.vue'
           ></div>
         </div>
         <div
-          class="h-[100dvh] w-[15%] left-[calc(100%+1px)] absolute bg-linear-to-r from-zinc-800/90"
+          class="absolute left-[calc(100%+1px)] h-[100dvh] w-[15%] bg-linear-to-r dark:from-zinc-800/90"
         >
           <div
-            class="w-full h-full absolute top-0 left-0 backdrop-blur-xs"
+            class="absolute top-0 left-0 h-full w-full backdrop-blur-xs"
             :style="{
-              backgroundColor: 'transparent',
               backgroundImage: 'radial-gradient(transparent 1px, black 1px)',
               backgroundSize: '4px 4px',
               maskImage:
@@ -52,7 +50,7 @@ import Header from '@/components/Header.vue'
       <div class="sm:px-8">
         <div class="mx-auto w-full max-w-7xl lg:px-8">
           <div
-            class="border-t border-zinc-100 pb-16 pt-10 dark:border-zinc-700/40"
+            class="border-t border-zinc-100 pt-10 pb-16 dark:border-zinc-700/40"
           >
             <div class="relative px-4 sm:px-8 lg:px-12">
               <div class="mx-auto max-w-2xl lg:max-w-5xl">
