@@ -10,10 +10,10 @@ import Header from '@/components/Header.vue'
         class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20 relative"
       >
         <div
-          class="h-[100dvh] w-[15%] right-[calc(100%+1px)] absolute bg-gradient-to-l from-zinc-800/90"
+          class="h-[100dvh] w-[15%] right-[calc(100%+1px)] absolute bg-linear-to-l from-zinc-800/90"
         >
           <div
-            class="w-full h-full absolute top-0 left-0 backdrop-blur-sm"
+            class="w-full h-full absolute top-0 left-0 backdrop-blur-xs"
             :style="{
               backgroundColor: 'transparent',
               backgroundImage: 'radial-gradient(transparent 1px, black 1px)',
@@ -24,10 +24,10 @@ import Header from '@/components/Header.vue'
           ></div>
         </div>
         <div
-          class="h-[100dvh] w-[15%] left-[calc(100%+1px)] absolute bg-gradient-to-r from-zinc-800/90"
+          class="h-[100dvh] w-[15%] left-[calc(100%+1px)] absolute bg-linear-to-r from-zinc-800/90"
         >
           <div
-            class="w-full h-full absolute top-0 left-0 backdrop-blur-sm"
+            class="w-full h-full absolute top-0 left-0 backdrop-blur-xs"
             :style="{
               backgroundColor: 'transparent',
               backgroundImage: 'radial-gradient(transparent 1px, black 1px)',
