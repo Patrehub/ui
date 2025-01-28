@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import {
+  ArrowPathIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+} from '@heroicons/vue/16/solid'
+import {
   FlexRender,
   getCoreRowModel,
   useVueTable,
@@ -10,6 +15,7 @@ import { ref } from 'vue'
 const { data, columns } = defineProps<{
   data: any[]
   columns: ColumnDef<any, any>[]
+  isLoading?: boolean
 }>()
 
 const table = useVueTable({
@@ -56,6 +62,48 @@ const table = useVueTable({
               </thead>
               <tbody>
                 <tr
+                  v-if="table.getRowModel().rows.length === 0"
+                  class="text-center text-zinc-400"
+                >
+                  <td class="py-4 text-center" colspan="99">
+                    <span
+                      v-if="isLoading !== undefined && isLoading"
+                      class="flex items-center justify-center gap-x-1.5 text-sm tracking-wide text-zinc-500"
+                    >
+                      <svg
+                        class="size-4 animate-spin text-zinc-400"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          class="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          stroke-width="4"
+                        ></circle>
+                        <path
+                          class="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Loading...
+                    </span>
+
+                    <span
+                      v-else-if="!isLoading"
+                      class="flex items-center justify-center gap-x-1.5 text-sm tracking-wide text-zinc-500"
+                    >
+                      <ExclamationCircleIcon class="size-4" />
+                      No data
+                    </span>
+                  </td>
+                </tr>
+                <tr
+                  v-else
                   v-for="row in table.getRowModel().rows"
                   :key="row.id"
                   class="group inset-shadow-2xs inset-shadow-[hsl(240,_6%,_12%)] even:bg-[hsl(240,_6%,_11%)]"

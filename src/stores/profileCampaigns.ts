@@ -1,33 +1,28 @@
 import { defineStore } from 'pinia'
-import {
-  Configuration,
-  DefaultApi,
-  ResponseError,
-  type Membership,
-} from '@/api'
+import { Configuration, DefaultApi, ResponseError, type Campaign } from '@/api'
 
 const config: Configuration = new Configuration({
   credentials: 'include',
 })
 const api = new DefaultApi(config)
 
-export const useProfileMembershipsStore = defineStore({
-  id: 'profileMemberships',
+export const useProfileCampaignsStore = defineStore({
+  id: 'ProfileCampaigns',
   state: () => ({
-    profileMemberships: Array<Membership>(),
+    ProfileCampaigns: Array<Campaign>(),
     isLoading: false,
   }),
   getters: {
-    getProfileMemberships(state) {
-      return state.profileMemberships
+    getProfileCampaigns(state) {
+      return state.ProfileCampaigns
     },
   },
   actions: {
-    async fetchProfileMemberships() {
+    async fetchProfileCampaigns() {
       try {
         this.isLoading = true
-        const resp = await api.getProfileMemberships()
-        this.profileMemberships = resp
+        const resp = await api.getProfileCampaigns()
+        this.ProfileCampaigns = resp
         this.isLoading = false
       } catch (err) {
         this.isLoading = false

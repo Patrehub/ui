@@ -82,7 +82,6 @@ const authStore = useAuthStore()
               </div>
             </div>
 
-            <!-- need a loading state on the table -->
             <div class="mt-12">
               <h1
                 class="text-2xl font-bold tracking-tight text-zinc-800 sm:text-3xl dark:text-zinc-100"

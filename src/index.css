@@ -19,6 +19,10 @@
   }
 }
 
+@theme {
+  --color-zinc-925: hsl(240, 6%, 7%);
+}
+
 @font-face {
   font-family: 'Mona Sans';
   src:

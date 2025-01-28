@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { onMounted, computed, h } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useProfileMembershipsStore } from '@/stores'
 import BasicTable from './BasicTable.vue'
 import { createColumnHelper } from '@tanstack/vue-table'
@@ -11,8 +11,11 @@ const profileMemberships = computed(() => {
   return store.getProfileMemberships
 })
 
-onMounted(() => {
-  store.fetchProfileMemberships()
+const isLoading = ref(true)
+
+onMounted(async () => {
+  await store.fetchProfileMemberships()
+  isLoading.value = false
 })
 
 const columnHelper = createColumnHelper<Membership>()
@@ -58,5 +61,9 @@ const columns = [
 </script>
 
 <template>
-  <BasicTable :columns="columns" :data="profileMemberships" />
+  <BasicTable
+    :columns="columns"
+    :data="profileMemberships"
+    :isLoading="isLoading"
+  />
 </template>
