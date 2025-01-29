@@ -50,7 +50,7 @@ const table = useVueTable({
                     v-for="header in headerGroup.headers"
                     :key="header.id"
                     :colSpan="header.colSpan"
-                    class="border-b border-b-zinc-800 bg-[hsla(240,_4%,_12%,_0.9)] py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-zinc-50 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
+                    class="border-b border-b-zinc-800/50 bg-[hsla(240,_4%,_12%,_0.9)] py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-zinc-50 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
                   >
                     <FlexRender
                       v-if="!header.isPlaceholder"

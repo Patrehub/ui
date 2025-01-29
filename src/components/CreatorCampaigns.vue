@@ -28,6 +28,17 @@ function cleanSummary(summary: string) {
 
   return element.innerText
 }
+
+function centsToDollars(cents: number) {
+  // format dollars
+
+  let dollars = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(cents / 100)
+
+  return dollars
+}
 </script>
 
 <template>
@@ -50,30 +61,77 @@ function cleanSummary(summary: string) {
     </div>
 
     <div class="mt-12">
-      <h1
-        class="text-xl font-bold tracking-tight text-zinc-800 sm:text-3xl dark:text-zinc-100"
-      >
-        Campaign Tiers
-      </h1>
-      <p class="mt-2 mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-        Here are the tiers for your campaign
-      </p>
+      <div class="flex items-center justify-between">
+        <div>
+          <h1
+            class="text-xl font-bold tracking-tight text-zinc-800 sm:text-3xl dark:text-zinc-100"
+          >
+            Campaign Tiers
+          </h1>
+          <p class="mt-2 mb-4 text-sm text-zinc-600 dark:text-zinc-400">
+            Here are the tiers for your campaign
+          </p>
+        </div>
 
-      <div
-        class="bg-zinc-925 rounded-3xl border-b border-zinc-800/50 border-b-zinc-700/50 p-4 inset-shadow-sm inset-shadow-zinc-950"
-      >
+        <div>
+          <button
+            class="flex cursor-pointer items-center rounded-[7px] border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide text-blue-50 inset-shadow-sm ring-1 ring-zinc-950 transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.35)] hover:border-t-blue-300 hover:from-blue-500 hover:to-blue-700 hover:text-white active:border-t-blue-950 active:from-blue-800 active:to-blue-800 active:inset-shadow-black/50"
+          >
+            Install Application
+          </button>
+        </div>
+      </div>
+
+      <div class="">
         <div
           v-for="campaign in profileCampaigns"
-          class="grid grid-cols-4 gap-4"
+          class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
         >
           <div
-            v-for="tier in campaign.tiers"
-            class="rounded-xl border border-zinc-800 bg-zinc-900 p-4 ring ring-zinc-950"
+            v-for="(tier, i) in campaign.tiers"
+            class="rounded-xl border-y border-zinc-700/50 border-t-zinc-700 border-b-zinc-900 bg-linear-to-b from-zinc-800 to-zinc-900 p-4 inset-shadow-sm ring ring-zinc-950 inset-shadow-zinc-700/60"
           >
-            <p class="text-lg font-medium text-zinc-50">{{ tier.title }}</p>
-            <p class="text-xs text-zinc-400">
-              {{ cleanSummary(tier.description) }}
+            <p class="text-base font-medium tracking-wider text-zinc-200">
+              {{ tier.title }}
             </p>
+
+            <p class="mt-1 text-xl font-bold text-white">
+              {{ centsToDollars(tier.amountCents) }}
+            </p>
+            <p class="-mt-1 text-sm text-zinc-400">
+              {{ campaign.isMonthly ? 'per month' : '' }}
+            </p>
+
+            <p
+              class="mt-4 line-clamp-2 min-h-[2.66em] text-xs leading-[1.33em] overflow-ellipsis text-zinc-400"
+            >
+              {{
+                cleanSummary(tier.description).length > 0
+                  ? cleanSummary(tier.description)
+                  : 'No description'
+              }}
+            </p>
+
+            <p class="mt-2 text-sm font-medium tracking-wide text-zinc-300">
+              Repo Benefits
+            </p>
+
+            <div class="mx-2 mt-2 grid grid-cols-2 gap-1.5">
+              <div
+                v-for="j in Array(i)"
+                class="flex items-center gap-x-1.5 overflow-clip"
+              >
+                <div class="">
+                  <img
+                    src="/github.svg"
+                    class="size-4.5 rounded-full opacity-50"
+                  />
+                </div>
+                <p class="font-mono text-sm tracking-wide text-zinc-300">
+                  /ExampleRepo
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

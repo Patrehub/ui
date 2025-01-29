@@ -78,7 +78,7 @@ function cleanSummary(summary: string) {
               {{ campaign.patronCount }} Patrons
             </div>
             <div
-              class="rounded-xl border border-white/10 bg-white/5 px-2 py-1 text-sm font-medium tracking-wide text-zinc-200 ring shadow ring-zinc-950/10 backdrop-blur-sm [text-shadow:_0px_1px_2px_rgba(0,0,0,0.3)]"
+              class="hidden rounded-xl border border-white/10 bg-white/5 px-2 py-1 text-sm font-medium tracking-wide text-zinc-200 ring shadow ring-zinc-950/10 backdrop-blur-sm [text-shadow:_0px_1px_2px_rgba(0,0,0,0.3)] md:block"
             >
               {{ campaign.tiers?.length }} Tiers
             </div>
