@@ -8,6 +8,8 @@ models/GetGithubInstallationsResponse.ts
 models/GithubAccount.ts
 models/GithubInstallation.ts
 models/GithubInstallationPermissions.ts
+models/GithubRepository.ts
+models/GithubTeam.ts
 models/Membership.ts
 models/Tier.ts
 models/User.ts

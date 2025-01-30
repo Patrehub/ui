@@ -19,6 +19,8 @@ import type {
   ErrorResponse,
   GetGithubInstallationsResponse,
   GithubAccount,
+  GithubRepository,
+  GithubTeam,
   Membership,
   User,
 } from '../models/index';
@@ -31,11 +33,23 @@ import {
     GetGithubInstallationsResponseToJSON,
     GithubAccountFromJSON,
     GithubAccountToJSON,
+    GithubRepositoryFromJSON,
+    GithubRepositoryToJSON,
+    GithubTeamFromJSON,
+    GithubTeamToJSON,
     MembershipFromJSON,
     MembershipToJSON,
     UserFromJSON,
     UserToJSON,
 } from '../models/index';
+
+export interface GetGithubRepositoriesRequest {
+    installationId: string;
+}
+
+export interface GetGithubTeamsRequest {
+    installationId: string;
+}
 
 /**
  * 
@@ -95,6 +109,76 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getGithubProfile(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GithubAccount> {
         const response = await this.getGithubProfileRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Get Github Repositories
+     * 
+     */
+    async getGithubRepositoriesRaw(requestParameters: GetGithubRepositoriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<GithubRepository>>> {
+        if (requestParameters['installationId'] == null) {
+            throw new runtime.RequiredError(
+                'installationId',
+                'Required parameter "installationId" was null or undefined when calling getGithubRepositories().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/github/repositories/{installationId}`.replace(`{${"installationId"}}`, encodeURIComponent(String(requestParameters['installationId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(GithubRepositoryFromJSON));
+    }
+
+    /**
+     * Get Github Repositories
+     * 
+     */
+    async getGithubRepositories(requestParameters: GetGithubRepositoriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<GithubRepository>> {
+        const response = await this.getGithubRepositoriesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Get Github Teams
+     * 
+     */
+    async getGithubTeamsRaw(requestParameters: GetGithubTeamsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<GithubTeam>>> {
+        if (requestParameters['installationId'] == null) {
+            throw new runtime.RequiredError(
+                'installationId',
+                'Required parameter "installationId" was null or undefined when calling getGithubTeams().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/github/teams/{installationId}`.replace(`{${"installationId"}}`, encodeURIComponent(String(requestParameters['installationId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(GithubTeamFromJSON));
+    }
+
+    /**
+     * Get Github Teams
+     * 
+     */
+    async getGithubTeams(requestParameters: GetGithubTeamsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<GithubTeam>> {
+        const response = await this.getGithubTeamsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
