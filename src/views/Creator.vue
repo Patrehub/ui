@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import InstallationCreate from '@/components/InstallationCreate.vue'
 import CreatorCampaigns from '@/components/CreatorCampaigns.vue'
 import { useAuthStore } from '@/stores'
 
