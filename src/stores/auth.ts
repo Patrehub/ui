@@ -81,7 +81,7 @@ export const useAuthStore = defineStore({
         }),
       }
       const response = await fetch(`${apiUrl}${urlPath}`, opts)
-      debugger
+      // debugger
 
       if (response.status === 401) {
         this.logout()

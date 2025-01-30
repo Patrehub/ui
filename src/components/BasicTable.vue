@@ -1,16 +1,11 @@
 <script setup lang="ts">
-import {
-  ArrowPathIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-} from '@heroicons/vue/16/solid'
+import { ExclamationCircleIcon } from '@heroicons/vue/16/solid'
 import {
   FlexRender,
   getCoreRowModel,
   useVueTable,
   type ColumnDef,
 } from '@tanstack/vue-table'
-import { ref } from 'vue'
 
 const { data, columns } = defineProps<{
   data: any[]

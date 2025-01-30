@@ -2,6 +2,9 @@
 import { onMounted, computed, ref, createElementBlock } from 'vue'
 import { useProfileCampaignsStore } from '@/stores/profileCampaigns'
 import CreatorCampaign from './CreatorCampaign.vue'
+import { PlusIcon } from '@heroicons/vue/16/solid'
+
+import InstallationModal from './InstallationModal.vue'
 
 const store = useProfileCampaignsStore()
 const profileCampaigns = computed(() => {
@@ -9,6 +12,18 @@ const profileCampaigns = computed(() => {
 })
 
 const isLoading = ref(true)
+
+const isOpen = ref(false)
+const tier = ref<any>(null)
+
+function setTier(newTier: any) {
+  tier.value = newTier
+  setIsOpen(true)
+}
+
+function setIsOpen(value: boolean) {
+  isOpen.value = value
+}
 
 onMounted(async () => {
   if (!profileCampaigns.value || profileCampaigns.value.length === 0) {
@@ -84,7 +99,18 @@ function centsToDollars(cents: number) {
 
       <div class="">
         <div
+          v-if="isLoading"
+          class="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+        >
+          <div
+            v-for="item in Array(3)"
+            class="h-66 animate-pulse rounded-xl border border-zinc-700/50 bg-zinc-800"
+          ></div>
+        </div>
+
+        <div
           v-for="campaign in profileCampaigns"
+          v-if="!isLoading"
           class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
         >
           <div
@@ -112,9 +138,22 @@ function centsToDollars(cents: number) {
               }}
             </p>
 
-            <p class="mt-2 text-sm font-medium tracking-wide text-zinc-300">
-              Repo Benefits
-            </p>
+            <div class="mt-2 flex items-center justify-between">
+              <p class="text-sm font-medium tracking-wide text-zinc-300">
+                Repo Benefits
+              </p>
+
+              <button
+                class="ring-zinc-925 flex cursor-pointer items-center gap-x-0.5 rounded-lg border border-white/5 border-t-white/10 bg-zinc-800 p-0.5 px-2 text-sm tracking-wide ring inset-shadow-transparent transition hover:bg-zinc-700/40 active:bg-zinc-800 active:inset-shadow-xs active:inset-shadow-black/50"
+                @click="setTier(tier)"
+              >
+                <PlusIcon class="size-4 text-zinc-200" />
+              </button>
+            </div>
+
+            <div
+              class="mt-2 border-y border-t-zinc-950 border-b-zinc-700/50"
+            ></div>
 
             <div class="mx-2 mt-2 grid grid-cols-2 gap-1.5">
               <div
@@ -136,13 +175,8 @@ function centsToDollars(cents: number) {
         </div>
       </div>
     </div>
-
-    <!-- <button
-      class="ring-zinc-925 flex cursor-pointer items-center gap-x-0.5 rounded-lg border border-white/5 border-t-white/10 bg-zinc-800/60 py-1 pr-2 pl-1 text-sm tracking-wide ring transition hover:bg-zinc-800/80"
-    >
-      <ChevronDownIcon class="size-5" />
-
-      View Tiers
-    </button> -->
   </div>
+
+  <!-- TODO: NEED PASS DOWN TIER -->
+  <InstallationModal v-model:isOpen="isOpen" />
 </template>
