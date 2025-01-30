@@ -17,11 +17,9 @@ import * as runtime from '../runtime';
 import type {
   Campaign,
   ErrorResponse,
-  Installation,
+  GetGithubInstallationsResponse,
+  GithubAccount,
   Membership,
-  PostInstallationRequest,
-  PostInstallationResponse,
-  PutInstallationRequest,
   User,
 } from '../models/index';
 import {
@@ -29,37 +27,15 @@ import {
     CampaignToJSON,
     ErrorResponseFromJSON,
     ErrorResponseToJSON,
-    InstallationFromJSON,
-    InstallationToJSON,
+    GetGithubInstallationsResponseFromJSON,
+    GetGithubInstallationsResponseToJSON,
+    GithubAccountFromJSON,
+    GithubAccountToJSON,
     MembershipFromJSON,
     MembershipToJSON,
-    PostInstallationRequestFromJSON,
-    PostInstallationRequestToJSON,
-    PostInstallationResponseFromJSON,
-    PostInstallationResponseToJSON,
-    PutInstallationRequestFromJSON,
-    PutInstallationRequestToJSON,
     UserFromJSON,
     UserToJSON,
 } from '../models/index';
-
-export interface CreateInstallationRequest {
-    postInstallationRequest?: PostInstallationRequest;
-}
-
-export interface DeleteInstallationRequest {
-    id: string;
-    putInstallationRequest?: PutInstallationRequest;
-}
-
-export interface GetInstallationRequest {
-    id: string;
-}
-
-export interface UpdateInstallationRequest {
-    id: string;
-    putInstallationRequest?: PutInstallationRequest;
-}
 
 /**
  * 
@@ -67,133 +43,58 @@ export interface UpdateInstallationRequest {
 export class DefaultApi extends runtime.BaseAPI {
 
     /**
-     * create an installation
+     * Get Github Installations
      * 
      */
-    async createInstallationRaw(requestParameters: CreateInstallationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PostInstallationResponse>> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/auth/installations`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: PostInstallationRequestToJSON(requestParameters['postInstallationRequest']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => PostInstallationResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * create an installation
-     * 
-     */
-    async createInstallation(requestParameters: CreateInstallationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PostInstallationResponse> {
-        const response = await this.createInstallationRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * create an installation
-     * 
-     */
-    async deleteInstallationRaw(requestParameters: DeleteInstallationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling deleteInstallation().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/auth/installations/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-            body: PutInstallationRequestToJSON(requestParameters['putInstallationRequest']),
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * create an installation
-     * 
-     */
-    async deleteInstallation(requestParameters: DeleteInstallationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.deleteInstallationRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     * Get an installation
-     * 
-     */
-    async getInstallationRaw(requestParameters: GetInstallationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Installation>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling getInstallation().'
-            );
-        }
-
+    async getGithubInstallationsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetGithubInstallationsResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/auth/installations/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/github/installations`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InstallationFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetGithubInstallationsResponseFromJSON(jsonValue));
     }
 
     /**
-     * Get an installation
+     * Get Github Installations
      * 
      */
-    async getInstallation(requestParameters: GetInstallationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Installation> {
-        const response = await this.getInstallationRaw(requestParameters, initOverrides);
+    async getGithubInstallations(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetGithubInstallationsResponse> {
+        const response = await this.getGithubInstallationsRaw(initOverrides);
         return await response.value();
     }
 
     /**
-     * Get all installations
+     * Get Github Profile
      * 
      */
-    async getInstallationsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Installation>>> {
+    async getGithubProfileRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GithubAccount>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/auth/installations`,
+            path: `/github/profile`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InstallationFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GithubAccountFromJSON(jsonValue));
     }
 
     /**
-     * Get all installations
+     * Get Github Profile
      * 
      */
-    async getInstallations(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Installation>> {
-        const response = await this.getInstallationsRaw(initOverrides);
+    async getGithubProfile(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GithubAccount> {
+        const response = await this.getGithubProfileRaw(initOverrides);
         return await response.value();
     }
 
@@ -279,43 +180,6 @@ export class DefaultApi extends runtime.BaseAPI {
     async getProfileMemberships(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Membership>> {
         const response = await this.getProfileMembershipsRaw(initOverrides);
         return await response.value();
-    }
-
-    /**
-     * update an installation
-     * 
-     */
-    async updateInstallationRaw(requestParameters: UpdateInstallationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling updateInstallation().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/auth/installations/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-            body: PutInstallationRequestToJSON(requestParameters['putInstallationRequest']),
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * update an installation
-     * 
-     */
-    async updateInstallation(requestParameters: UpdateInstallationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.updateInstallationRaw(requestParameters, initOverrides);
     }
 
 }

@@ -4,11 +4,11 @@ index.ts
 models/Benefit.ts
 models/Campaign.ts
 models/ErrorResponse.ts
-models/Installation.ts
+models/GetGithubInstallationsResponse.ts
+models/GithubAccount.ts
+models/GithubInstallation.ts
+models/GithubInstallationPermissions.ts
 models/Membership.ts
-models/PostInstallationRequest.ts
-models/PostInstallationResponse.ts
-models/PutInstallationRequest.ts
 models/Tier.ts
 models/User.ts
 models/index.ts
