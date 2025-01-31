@@ -15,6 +15,7 @@
 
 import * as runtime from '../runtime';
 import type {
+  Benefit,
   ErrorResponse,
   GetGithubInstallationsResponse,
   GithubAccount,
@@ -23,6 +24,8 @@ import type {
   PatreonUser,
 } from '../models/index';
 import {
+    BenefitFromJSON,
+    BenefitToJSON,
     ErrorResponseFromJSON,
     ErrorResponseToJSON,
     GetGithubInstallationsResponseFromJSON,
@@ -49,6 +52,34 @@ export interface GetGithubTeamsRequest {
  * 
  */
 export class DefaultApi extends runtime.BaseAPI {
+
+    /**
+     * Get Benefits
+     * 
+     */
+    async getBenefitsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Benefit>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/benefits`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BenefitFromJSON));
+    }
+
+    /**
+     * Get Benefits
+     * 
+     */
+    async getBenefits(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Benefit>> {
+        const response = await this.getBenefitsRaw(initOverrides);
+        return await response.value();
+    }
 
     /**
      * Get Github Installations
@@ -201,6 +232,34 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getPatreonProfile(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PatreonUser> {
         const response = await this.getPatreonProfileRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Post Benefit
+     * 
+     */
+    async postBenefitRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Benefit>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/benefits`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BenefitFromJSON(jsonValue));
+    }
+
+    /**
+     * Post Benefit
+     * 
+     */
+    async postBenefit(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Benefit> {
+        const response = await this.postBenefitRaw(initOverrides);
         return await response.value();
     }
 

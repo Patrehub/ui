@@ -30,67 +30,43 @@ export interface Benefit {
      * @type {string}
      * @memberof Benefit
      */
-    appExternalId?: string;
+    userId: string;
     /**
      * 
      * @type {string}
      * @memberof Benefit
      */
-    appMeta?: string;
+    tierId: string;
     /**
      * 
      * @type {string}
      * @memberof Benefit
      */
-    benefitType: string;
+    type: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Benefit
+     */
+    installationId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Benefit
+     */
+    teamId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Benefit
+     */
+    repository: string;
     /**
      * 
      * @type {Date}
      * @memberof Benefit
      */
     createdAt: Date;
-    /**
-     * 
-     * @type {string}
-     * @memberof Benefit
-     */
-    description: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Benefit
-     */
-    isDeleted: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Benefit
-     */
-    isEnded: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Benefit
-     */
-    isPublished: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof Benefit
-     */
-    ruleType: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Benefit
-     */
-    tiersCount: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Benefit
-     */
-    title: string;
 }
 
 /**
@@ -98,15 +74,13 @@ export interface Benefit {
  */
 export function instanceOfBenefit(value: object): value is Benefit {
     if (!('id' in value) || value['id'] === undefined) return false;
-    if (!('benefitType' in value) || value['benefitType'] === undefined) return false;
+    if (!('userId' in value) || value['userId'] === undefined) return false;
+    if (!('tierId' in value) || value['tierId'] === undefined) return false;
+    if (!('type' in value) || value['type'] === undefined) return false;
+    if (!('installationId' in value) || value['installationId'] === undefined) return false;
+    if (!('teamId' in value) || value['teamId'] === undefined) return false;
+    if (!('repository' in value) || value['repository'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
-    if (!('description' in value) || value['description'] === undefined) return false;
-    if (!('isDeleted' in value) || value['isDeleted'] === undefined) return false;
-    if (!('isEnded' in value) || value['isEnded'] === undefined) return false;
-    if (!('isPublished' in value) || value['isPublished'] === undefined) return false;
-    if (!('ruleType' in value) || value['ruleType'] === undefined) return false;
-    if (!('tiersCount' in value) || value['tiersCount'] === undefined) return false;
-    if (!('title' in value) || value['title'] === undefined) return false;
     return true;
 }
 
@@ -121,17 +95,13 @@ export function BenefitFromJSONTyped(json: any, ignoreDiscriminator: boolean): B
     return {
         
         'id': json['id'],
-        'appExternalId': json['app_external_id'] == null ? undefined : json['app_external_id'],
-        'appMeta': json['app_meta'] == null ? undefined : json['app_meta'],
-        'benefitType': json['benefit_type'],
+        'userId': json['user_id'],
+        'tierId': json['tier_id'],
+        'type': json['type'],
+        'installationId': json['installation_id'],
+        'teamId': json['team_id'],
+        'repository': json['repository'],
         'createdAt': (new Date(json['created_at'])),
-        'description': json['description'],
-        'isDeleted': json['is_deleted'],
-        'isEnded': json['is_ended'],
-        'isPublished': json['is_published'],
-        'ruleType': json['rule_type'],
-        'tiersCount': json['tiers_count'],
-        'title': json['title'],
     };
 }
 
@@ -147,17 +117,13 @@ export function BenefitToJSONTyped(value?: Benefit | null, ignoreDiscriminator: 
     return {
         
         'id': value['id'],
-        'app_external_id': value['appExternalId'],
-        'app_meta': value['appMeta'],
-        'benefit_type': value['benefitType'],
+        'user_id': value['userId'],
+        'tier_id': value['tierId'],
+        'type': value['type'],
+        'installation_id': value['installationId'],
+        'team_id': value['teamId'],
+        'repository': value['repository'],
         'created_at': ((value['createdAt']).toISOString()),
-        'description': value['description'],
-        'is_deleted': value['isDeleted'],
-        'is_ended': value['isEnded'],
-        'is_published': value['isPublished'],
-        'rule_type': value['ruleType'],
-        'tiers_count': value['tiersCount'],
-        'title': value['title'],
     };
 }
 

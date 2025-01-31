@@ -1,6 +1,7 @@
 apis/DefaultApi.ts
 apis/index.ts
 index.ts
+models/Benefit.ts
 models/ErrorResponse.ts
 models/GetGithubInstallationsResponse.ts
 models/GithubAccount.ts

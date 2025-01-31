@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+export * from './Benefit';
 export * from './ErrorResponse';
 export * from './GetGithubInstallationsResponse';
 export * from './GithubAccount';
