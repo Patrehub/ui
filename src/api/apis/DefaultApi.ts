@@ -15,18 +15,14 @@
 
 import * as runtime from '../runtime';
 import type {
-  Campaign,
   ErrorResponse,
   GetGithubInstallationsResponse,
   GithubAccount,
   GithubRepository,
   GithubTeam,
-  Membership,
-  User,
+  PatreonUser,
 } from '../models/index';
 import {
-    CampaignFromJSON,
-    CampaignToJSON,
     ErrorResponseFromJSON,
     ErrorResponseToJSON,
     GetGithubInstallationsResponseFromJSON,
@@ -37,10 +33,8 @@ import {
     GithubRepositoryToJSON,
     GithubTeamFromJSON,
     GithubTeamToJSON,
-    MembershipFromJSON,
-    MembershipToJSON,
-    UserFromJSON,
-    UserToJSON,
+    PatreonUserFromJSON,
+    PatreonUserToJSON,
 } from '../models/index';
 
 export interface GetGithubRepositoriesRequest {
@@ -183,86 +177,30 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * Get profile
+     * Get profile patreon
      * 
      */
-    async getProfileRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<User>> {
+    async getPatreonProfileRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PatreonUser>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/profile`,
+            path: `/patreon/profile`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UserFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PatreonUserFromJSON(jsonValue));
     }
 
     /**
-     * Get profile
+     * Get profile patreon
      * 
      */
-    async getProfile(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
-        const response = await this.getProfileRaw(initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Get profile campaigns
-     * 
-     */
-    async getProfileCampaignsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Campaign>>> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/profile/campaigns`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CampaignFromJSON));
-    }
-
-    /**
-     * Get profile campaigns
-     * 
-     */
-    async getProfileCampaigns(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Campaign>> {
-        const response = await this.getProfileCampaignsRaw(initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Get profile memberships
-     * 
-     */
-    async getProfileMembershipsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Membership>>> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/profile/memberships`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(MembershipFromJSON));
-    }
-
-    /**
-     * Get profile memberships
-     * 
-     */
-    async getProfileMemberships(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Membership>> {
-        const response = await this.getProfileMembershipsRaw(initOverrides);
+    async getPatreonProfile(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PatreonUser> {
+        const response = await this.getPatreonProfileRaw(initOverrides);
         return await response.value();
     }
 

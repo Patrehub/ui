@@ -1,8 +1,6 @@
 apis/DefaultApi.ts
 apis/index.ts
 index.ts
-models/Benefit.ts
-models/Campaign.ts
 models/ErrorResponse.ts
 models/GetGithubInstallationsResponse.ts
 models/GithubAccount.ts
@@ -10,8 +8,11 @@ models/GithubInstallation.ts
 models/GithubInstallationPermissions.ts
 models/GithubRepository.ts
 models/GithubTeam.ts
-models/Membership.ts
-models/Tier.ts
-models/User.ts
+models/PatreonCampaign.ts
+models/PatreonCampaignAvatarPhotoImageUrls.ts
+models/PatreonCampaignCoverPhotoUrlSizes.ts
+models/PatreonPledge.ts
+models/PatreonReward.ts
+models/PatreonUser.ts
 models/index.ts
 runtime.ts
