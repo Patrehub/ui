@@ -225,7 +225,7 @@ export interface PatreonUser {
      * @type {Array<PatreonPledge>}
      * @memberof PatreonUser
      */
-    pledges: Array<PatreonPledge>;
+    pledges?: Array<PatreonPledge>;
 }
 
 /**
@@ -252,7 +252,6 @@ export function instanceOfPatreonUser(value: object): value is PatreonUser {
     if (!('thumbUrl' in value) || value['thumbUrl'] === undefined) return false;
     if (!('url' in value) || value['url'] === undefined) return false;
     if (!('vanity' in value) || value['vanity'] === undefined) return false;
-    if (!('pledges' in value) || value['pledges'] === undefined) return false;
     return true;
 }
 
@@ -297,7 +296,7 @@ export function PatreonUserFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'vanity': json['vanity'],
         'youtube': json['youtube'] == null ? undefined : json['youtube'],
         'campaign': json['campaign'] == null ? undefined : PatreonCampaignFromJSON(json['campaign']),
-        'pledges': ((json['pledges'] as Array<any>).map(PatreonPledgeFromJSON)),
+        'pledges': json['pledges'] == null ? undefined : ((json['pledges'] as Array<any>).map(PatreonPledgeFromJSON)),
     };
 }
 
@@ -343,7 +342,7 @@ export function PatreonUserToJSONTyped(value?: PatreonUser | null, ignoreDiscrim
         'vanity': value['vanity'],
         'youtube': value['youtube'],
         'campaign': PatreonCampaignToJSON(value['campaign']),
-        'pledges': ((value['pledges'] as Array<any>).map(PatreonPledgeToJSON)),
+        'pledges': value['pledges'] == null ? undefined : ((value['pledges'] as Array<any>).map(PatreonPledgeToJSON)),
     };
 }
 

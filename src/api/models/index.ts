@@ -14,3 +14,4 @@ export * from './PatreonCampaignCoverPhotoUrlSizes';
 export * from './PatreonPledge';
 export * from './PatreonReward';
 export * from './PatreonUser';
+export * from './Webhook';

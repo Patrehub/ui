@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { PatreonCampaign } from './PatreonCampaign';
+import {
+    PatreonCampaignFromJSON,
+    PatreonCampaignFromJSONTyped,
+    PatreonCampaignToJSON,
+    PatreonCampaignToJSONTyped,
+} from './PatreonCampaign';
+
 /**
  * 
  * @export
@@ -175,6 +183,12 @@ export interface PatreonReward {
      * @memberof PatreonReward
      */
     welcomeVideoUrl?: string;
+    /**
+     * 
+     * @type {PatreonCampaign}
+     * @memberof PatreonReward
+     */
+    campaign?: PatreonCampaign;
 }
 
 /**
@@ -237,6 +251,7 @@ export function PatreonRewardFromJSONTyped(json: any, ignoreDiscriminator: boole
         'welcomeMessageUnsafe': json['welcome_message_unsafe'] == null ? undefined : json['welcome_message_unsafe'],
         'welcomeVideoEmbed': json['welcome_video_embed'] == null ? undefined : json['welcome_video_embed'],
         'welcomeVideoUrl': json['welcome_video_url'] == null ? undefined : json['welcome_video_url'],
+        'campaign': json['campaign'] == null ? undefined : PatreonCampaignFromJSON(json['campaign']),
     };
 }
 
@@ -277,6 +292,7 @@ export function PatreonRewardToJSONTyped(value?: PatreonReward | null, ignoreDis
         'welcome_message_unsafe': value['welcomeMessageUnsafe'],
         'welcome_video_embed': value['welcomeVideoEmbed'],
         'welcome_video_url': value['welcomeVideoUrl'],
+        'campaign': PatreonCampaignToJSON(value['campaign']),
     };
 }
 

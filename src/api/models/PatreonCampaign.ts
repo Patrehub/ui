@@ -280,7 +280,7 @@ export interface PatreonCampaign {
      * @type {Array<PatreonReward>}
      * @memberof PatreonCampaign
      */
-    rewards: Array<PatreonReward>;
+    rewards?: Array<PatreonReward>;
 }
 
 /**
@@ -320,7 +320,6 @@ export function instanceOfPatreonCampaign(value: object): value is PatreonCampai
     if (!('shouldDisplayChatTab' in value) || value['shouldDisplayChatTab'] === undefined) return false;
     if (!('summary' in value) || value['summary'] === undefined) return false;
     if (!('url' in value) || value['url'] === undefined) return false;
-    if (!('rewards' in value) || value['rewards'] === undefined) return false;
     return true;
 }
 
@@ -373,7 +372,7 @@ export function PatreonCampaignFromJSONTyped(json: any, ignoreDiscriminator: boo
         'thanksMsg': json['thanks_msg'] == null ? undefined : json['thanks_msg'],
         'thanksVideoUrl': json['thanks_video_url'] == null ? undefined : json['thanks_video_url'],
         'url': json['url'],
-        'rewards': ((json['rewards'] as Array<any>).map(PatreonRewardFromJSON)),
+        'rewards': json['rewards'] == null ? undefined : ((json['rewards'] as Array<any>).map(PatreonRewardFromJSON)),
     };
 }
 
@@ -427,7 +426,7 @@ export function PatreonCampaignToJSONTyped(value?: PatreonCampaign | null, ignor
         'thanks_msg': value['thanksMsg'],
         'thanks_video_url': value['thanksVideoUrl'],
         'url': value['url'],
-        'rewards': ((value['rewards'] as Array<any>).map(PatreonRewardToJSON)),
+        'rewards': value['rewards'] == null ? undefined : ((value['rewards'] as Array<any>).map(PatreonRewardToJSON)),
     };
 }
 

@@ -15,5 +15,6 @@ models/PatreonCampaignCoverPhotoUrlSizes.ts
 models/PatreonPledge.ts
 models/PatreonReward.ts
 models/PatreonUser.ts
+models/Webhook.ts
 models/index.ts
 runtime.ts

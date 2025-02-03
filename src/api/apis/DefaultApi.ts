@@ -22,6 +22,7 @@ import type {
   GithubRepository,
   GithubTeam,
   PatreonUser,
+  Webhook,
 } from '../models/index';
 import {
     BenefitFromJSON,
@@ -38,7 +39,17 @@ import {
     GithubTeamToJSON,
     PatreonUserFromJSON,
     PatreonUserToJSON,
+    WebhookFromJSON,
+    WebhookToJSON,
 } from '../models/index';
+
+export interface DeleteBenefitRequest {
+    id: string;
+}
+
+export interface DeleteWebhookRequest {
+    id: string;
+}
 
 export interface GetGithubRepositoriesRequest {
     installationId: string;
@@ -52,6 +63,74 @@ export interface GetGithubTeamsRequest {
  * 
  */
 export class DefaultApi extends runtime.BaseAPI {
+
+    /**
+     * Delete Benefit
+     * 
+     */
+    async deleteBenefitRaw(requestParameters: DeleteBenefitRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling deleteBenefit().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/benefits/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Delete Benefit
+     * 
+     */
+    async deleteBenefit(requestParameters: DeleteBenefitRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteBenefitRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Delete Webhook
+     * 
+     */
+    async deleteWebhookRaw(requestParameters: DeleteWebhookRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling deleteWebhook().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/webhooks/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Delete Webhook
+     * 
+     */
+    async deleteWebhook(requestParameters: DeleteWebhookRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteWebhookRaw(requestParameters, initOverrides);
+    }
 
     /**
      * Get Benefits
@@ -208,7 +287,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * Get profile patreon
+     * Get patreon profile
      * 
      */
     async getPatreonProfileRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PatreonUser>> {
@@ -227,11 +306,39 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * Get profile patreon
+     * Get patreon profile
      * 
      */
     async getPatreonProfile(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PatreonUser> {
         const response = await this.getPatreonProfileRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Get webhooks
+     * 
+     */
+    async getWebhooksRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Webhook>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/webhooks`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(WebhookFromJSON));
+    }
+
+    /**
+     * Get webhooks
+     * 
+     */
+    async getWebhooks(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Webhook>> {
+        const response = await this.getWebhooksRaw(initOverrides);
         return await response.value();
     }
 
@@ -260,6 +367,34 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async postBenefit(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Benefit> {
         const response = await this.postBenefitRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Post Webhook
+     * 
+     */
+    async postWebhookRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Webhook>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/webhooks`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => WebhookFromJSON(jsonValue));
+    }
+
+    /**
+     * Post Webhook
+     * 
+     */
+    async postWebhook(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Webhook> {
+        const response = await this.postWebhookRaw(initOverrides);
         return await response.value();
     }
 
