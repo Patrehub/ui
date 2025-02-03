@@ -1,14 +1,14 @@
 <script setup lang="tsx">
 import { onMounted, computed, ref, createElementBlock } from 'vue'
-import { useProfileCampaignsStore } from '@/stores/profileCampaigns'
 import CreatorCampaign from './CreatorCampaign.vue'
 import { PlusIcon } from '@heroicons/vue/16/solid'
 
 import InstallationModal from './InstallationModal.vue'
+import { usePatreonProfileStore } from '@/stores'
 
-const store = useProfileCampaignsStore()
-const profileCampaigns = computed(() => {
-  return store.getProfileCampaigns
+const store = usePatreonProfileStore()
+const patreonProfile = computed(() => {
+  return store.getPatreonProfile
 })
 
 const isLoading = ref(true)
@@ -26,13 +26,13 @@ function setIsOpen(value: boolean) {
 }
 
 onMounted(async () => {
-  if (!profileCampaigns.value || profileCampaigns.value.length === 0) {
+  if (!patreonProfile.value) {
     isLoading.value = true
-    await store.fetchProfileCampaigns()
+    await store.fetchPatreonProfile()
     isLoading.value = false
   } else {
     isLoading.value = false
-    await store.fetchProfileCampaigns()
+    await store.fetchPatreonProfile()
   }
 })
 
@@ -65,14 +65,14 @@ function centsToDollars(cents: number) {
     ></div>
 
     <div
-      v-if="!isLoading && profileCampaigns.length === 0"
+      v-if="!isLoading && patreonProfile?.campaign === null"
       class="relative mb-4 h-52 overflow-clip rounded-3xl border border-zinc-700/50 bg-zinc-800 p-3 text-zinc-300"
     >
       No campaigns found
     </div>
 
-    <div v-for="campaign in profileCampaigns">
-      <CreatorCampaign :campaign="campaign" />
+    <div v-if="!isLoading && patreonProfile?.campaign">
+      <CreatorCampaign :campaign="patreonProfile?.campaign" />
     </div>
 
     <div class="mt-12">
@@ -109,12 +109,11 @@ function centsToDollars(cents: number) {
         </div>
 
         <div
-          v-for="campaign in profileCampaigns"
-          v-if="!isLoading"
+          v-if="!isLoading && patreonProfile?.campaign"
           class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
         >
           <div
-            v-for="(tier, i) in campaign.tiers"
+            v-for="(tier, i) in patreonProfile?.campaign.rewards"
             class="rounded-xl border-y border-zinc-700/50 border-t-zinc-700 border-b-zinc-900 bg-linear-to-b from-zinc-800 to-zinc-900 p-4 inset-shadow-sm ring ring-zinc-950 inset-shadow-zinc-700/60"
           >
             <p class="text-base font-medium tracking-wider text-zinc-200">
@@ -125,7 +124,7 @@ function centsToDollars(cents: number) {
               {{ centsToDollars(tier.amountCents) }}
             </p>
             <p class="-mt-1 text-sm text-zinc-400">
-              {{ campaign.isMonthly ? 'per month' : '' }}
+              <!-- {{ campaign.isMonthly ? 'per month' : '' }} -->
             </p>
 
             <p

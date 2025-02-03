@@ -37,6 +37,18 @@ function setInviteType(type: 'team' | 'contributor') {
 function closeDialog() {
   emit('update:isOpen', false)
 }
+
+import { useForm } from '@tanstack/vue-form'
+
+const form = useForm({
+  defaultValues: {
+    fullName: '',
+  },
+  onSubmit: async ({ value }) => {
+    // Do something with form data
+    console.log(value)
+  },
+})
 </script>
 
 <template>
@@ -88,52 +100,62 @@ function closeDialog() {
                     </p>
                   </div>
 
-                  <div class="mt-4 text-left">
-                    <div class="text-sm text-zinc-200">
-                      <label>Add supporters as</label>
+                  <form
+                    @submit="
+                      e => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        form.handleSubmit()
+                      }
+                    "
+                  >
+                    <div class="mt-4 text-left">
+                      <div class="text-sm text-zinc-200">
+                        <label>Add supporters as</label>
 
-                      <div
-                        class="relative mt-1 flex items-center gap-x-1 rounded-lg border border-zinc-700 bg-zinc-800"
-                      >
                         <div
-                          :class="[
-                            {
-                              'left-[2px]': inviteType === 'contributor',
-                              'left-[calc(50%+2px)]': inviteType === 'team',
-                            },
-                            'absolute inset-0.5 flex w-[calc(50%-4px)] items-center rounded-md border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide inset-shadow-sm shadow shadow-zinc-950/50 transition-all',
-                          ]"
-                        ></div>
+                          class="relative mt-1 flex items-center gap-x-1 rounded-lg border border-zinc-700 bg-zinc-800"
+                        >
+                          <div
+                            :class="[
+                              {
+                                'left-[2px]': inviteType === 'contributor',
+                                'left-[calc(50%+2px)]': inviteType === 'team',
+                              },
+                              'absolute inset-0.5 flex w-[calc(50%-4px)] items-center rounded-md border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide inset-shadow-sm shadow shadow-zinc-950/50 transition-all',
+                            ]"
+                          ></div>
 
-                        <button
-                          @click="setInviteType('contributor')"
-                          :class="[
-                            {
-                              'text-white': inviteType === 'contributor',
-                              'font-medium': inviteType === 'contributor',
-                            },
-                            'relative flex flex-1 cursor-pointer items-center justify-center gap-x-1 rounded-md p-1.5 text-center tracking-wide transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.2)] hover:text-white',
-                          ]"
-                        >
-                          <UserIcon class="size-4.5 drop-shadow" />
-                          Contributor
-                        </button>
-                        <button
-                          @click="setInviteType('team')"
-                          :class="[
-                            {
-                              'text-white': inviteType === 'team',
-                              'font-medium': inviteType === 'team',
-                            },
-                            'relative flex flex-1 cursor-pointer items-center justify-center gap-x-1 rounded-md p-1.5 text-center tracking-wide transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.2)] hover:text-white',
-                          ]"
-                        >
-                          <UserGroupIcon class="size-4.5 drop-shadow" />
-                          Team Member
-                        </button>
+                          <button
+                            @click="setInviteType('contributor')"
+                            :class="[
+                              {
+                                'text-white': inviteType === 'contributor',
+                                'font-medium': inviteType === 'contributor',
+                              },
+                              'relative flex flex-1 cursor-pointer items-center justify-center gap-x-1 rounded-md p-1.5 text-center tracking-wide transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.2)] hover:text-white',
+                            ]"
+                          >
+                            <UserIcon class="size-4.5 drop-shadow" />
+                            Contributor
+                          </button>
+                          <button
+                            @click="setInviteType('team')"
+                            :class="[
+                              {
+                                'text-white': inviteType === 'team',
+                                'font-medium': inviteType === 'team',
+                              },
+                              'relative flex flex-1 cursor-pointer items-center justify-center gap-x-1 rounded-md p-1.5 text-center tracking-wide transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.2)] hover:text-white',
+                            ]"
+                          >
+                            <UserGroupIcon class="size-4.5 drop-shadow" />
+                            Team Member
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </form>
                 </div>
               </div>
               <div class="mt-5 flex items-center justify-between sm:mt-6">

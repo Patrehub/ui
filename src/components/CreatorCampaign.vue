@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import type { Campaign } from '@/api'
+import type { PatreonCampaign } from '@/api'
 import { ChevronDownIcon } from '@heroicons/vue/16/solid'
 
 import { ref } from 'vue'
@@ -7,7 +7,7 @@ import { ref } from 'vue'
 const dropDownOpen = ref(false)
 
 const { campaign } = defineProps<{
-  campaign: Campaign
+  campaign: PatreonCampaign
   isLoading?: boolean
 }>()
 
@@ -39,18 +39,18 @@ function cleanSummary(summary: string) {
         <div class="flex items-end justify-between">
           <div class="flex items-end gap-x-2.5">
             <img
-              :src="campaign.imageUrl"
+              :src="campaign.avatarPhotoUrl"
               class="size-13 rounded-full bg-slate-500 object-cover ring ring-zinc-950 ring-offset-zinc-700 outline -outline-offset-1 outline-white/20"
             />
 
             <div class="flex flex-col">
               <div class="flex items-center gap-x-2.5">
                 <h3 class="text-2xl font-medium text-white">
-                  {{ campaign.vanity }}
+                  {{ campaign.name }}
                 </h3>
                 <a
                   target="_blank"
-                  :href="`https://www.patreon.com/${campaign.vanity}`"
+                  :href="`https://www.patreon.com/${campaign.url}`"
                   class="group text-sm tracking-wide"
                 >
                   <div
@@ -60,7 +60,7 @@ function cleanSummary(summary: string) {
                       src="/patreon.svg"
                       class="size-4 opacity-80 transition group-hover:opacity-100"
                     />
-                    /{{ campaign.vanity }}
+                    /{{ campaign.url.replace('https://www.patreon.com/', '') }}
                   </div>
                 </a>
               </div>
@@ -80,7 +80,7 @@ function cleanSummary(summary: string) {
             <div
               class="hidden rounded-xl border border-white/10 bg-white/5 px-2 py-1 text-sm font-medium tracking-wide text-zinc-200 ring shadow ring-zinc-950/10 backdrop-blur-sm [text-shadow:_0px_1px_2px_rgba(0,0,0,0.3)] md:block"
             >
-              {{ campaign.tiers?.length }} Tiers
+              {{ campaign.rewards?.length }} Tiers
             </div>
           </div>
         </div>

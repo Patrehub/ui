@@ -1,27 +1,27 @@
 <script setup lang="tsx">
 import { onMounted, computed, ref } from 'vue'
-import { useProfileMembershipsStore } from '@/stores'
+import { usePatreonProfileStore } from '@/stores'
 import BasicTable from './BasicTable.vue'
 import { createColumnHelper } from '@tanstack/vue-table'
-import type { Membership } from '@/api'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/16/solid'
+import type { PatreonPledge } from '@/api'
 
-const store = useProfileMembershipsStore()
-const profileMemberships = computed(() => {
-  return store.getProfileMemberships
+const store = usePatreonProfileStore()
+const profilePledges = computed(() => {
+  return store.getPatreonProfile?.pledges ?? []
 })
 
 const isLoading = ref(true)
 
 onMounted(async () => {
-  await store.fetchProfileMemberships()
+  await store.fetchPatreonProfile()
   isLoading.value = false
 })
 
-const columnHelper = createColumnHelper<Membership>()
+const columnHelper = createColumnHelper<PatreonPledge>()
 
 const columns = [
-  columnHelper.accessor('campaign.imageUrl', {
+  columnHelper.accessor('creator.campaign.avatarPhotoImageUrls._default', {
     header: () => 'Creator',
     cell: props => (
       <span class="flex items-center gap-2">
@@ -31,12 +31,12 @@ const columns = [
         />
 
         <p class="font-medium text-zinc-50">
-          {props.row.original.campaign?.vanity}
+          {props.row.original.creator.campaign?.name}
         </p>
       </span>
     ),
   }),
-  columnHelper.accessor('campaign.creationName', {
+  columnHelper.accessor('creator.campaign.creationName', {
     header: () => 'About',
     cell: ({ getValue }) => (
       <p class="line-clamp-2 break-after-all text-ellipsis text-zinc-400">
@@ -44,7 +44,7 @@ const columns = [
       </p>
     ),
   }),
-  columnHelper.accessor('campaign.url', {
+  columnHelper.accessor('creator.url', {
     header: () => '',
     cell: props => (
       <a
@@ -63,7 +63,7 @@ const columns = [
 <template>
   <BasicTable
     :columns="columns"
-    :data="profileMemberships"
+    :data="profilePledges"
     :isLoading="isLoading"
   />
 </template>

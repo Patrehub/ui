@@ -3,7 +3,7 @@ import {
   Configuration,
   DefaultApi,
   ResponseError,
-  type Membership,
+  type PatreonUser,
 } from '@/api'
 
 const config: Configuration = new Configuration({
@@ -11,23 +11,23 @@ const config: Configuration = new Configuration({
 })
 const api = new DefaultApi(config)
 
-export const useProfileMembershipsStore = defineStore({
-  id: 'profileMemberships',
+export const usePatreonProfileStore = defineStore({
+  id: 'patreonProfile',
   state: () => ({
-    profileMemberships: Array<Membership>(),
+    patreonProfile: null as PatreonUser | null,
     isLoading: false,
   }),
   getters: {
-    getProfileMemberships(state) {
-      return state.profileMemberships
+    getPatreonProfile(state) {
+      return state.patreonProfile
     },
   },
   actions: {
-    async fetchProfileMemberships() {
+    async fetchPatreonProfile() {
       try {
         this.isLoading = true
-        const resp = await api.getProfileMemberships()
-        this.profileMemberships = resp
+        const resp = await api.getPatreonProfile()
+        this.patreonProfile = resp
         this.isLoading = false
       } catch (err) {
         this.isLoading = false
