@@ -1,10 +1,5 @@
 <script setup lang="tsx">
 import type { PatreonCampaign } from '@/api'
-import { ChevronDownIcon } from '@heroicons/vue/16/solid'
-
-import { ref } from 'vue'
-
-const dropDownOpen = ref(false)
 
 const { campaign } = defineProps<{
   campaign: PatreonCampaign
@@ -50,7 +45,7 @@ function cleanSummary(summary: string) {
                 </h3>
                 <a
                   target="_blank"
-                  :href="`https://www.patreon.com/${campaign.url}`"
+                  :href="`${campaign.url}`"
                   class="group text-sm tracking-wide"
                 >
                   <div

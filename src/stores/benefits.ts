@@ -1,33 +1,28 @@
 import { defineStore } from 'pinia'
-import {
-  Configuration,
-  DefaultApi,
-  ResponseError,
-  type GetGithubInstallationsResponse,
-} from '@/api'
+import { Configuration, DefaultApi, ResponseError, type Benefit } from '@/api'
 
 const config: Configuration = new Configuration({
   credentials: 'include',
 })
 const api = new DefaultApi(config)
 
-export const useGithubInstallationsStore = defineStore({
-  id: 'githubInstallations',
+export const useBenefitsStore = defineStore({
+  id: 'benefits',
   state: () => ({
-    githubInstallations: null as GetGithubInstallationsResponse | null,
+    benefits: Array<Benefit>(),
     isLoading: false,
   }),
   getters: {
-    getGithubInstallations(state) {
-      return state.githubInstallations
+    getBenefits(state) {
+      return state.benefits
     },
   },
   actions: {
-    async fetchGithubInstallations() {
+    async fetchBenefits() {
       try {
         this.isLoading = true
-        const resp = await api.getGithubInstallations()
-        this.githubInstallations = resp
+        const resp = await api.postBenefit({})
+        // this.benefits = resp
         this.isLoading = false
       } catch (err) {
         this.isLoading = false

@@ -3,7 +3,7 @@ import {
   Configuration,
   DefaultApi,
   ResponseError,
-  type GetGithubInstallationsResponse,
+  type GithubRepository,
 } from '@/api'
 
 const config: Configuration = new Configuration({
@@ -11,23 +11,25 @@ const config: Configuration = new Configuration({
 })
 const api = new DefaultApi(config)
 
-export const useGithubInstallationsStore = defineStore({
-  id: 'githubInstallations',
+export const useGithubReposStore = defineStore({
+  id: 'githubRepos',
   state: () => ({
-    githubInstallations: null as GetGithubInstallationsResponse | null,
+    githubRepos: Array<GithubRepository>(),
     isLoading: false,
   }),
   getters: {
-    getGithubInstallations(state) {
-      return state.githubInstallations
+    getGithubRepos(state) {
+      return state.githubRepos
     },
   },
   actions: {
-    async fetchGithubInstallations() {
+    async fetchGithubRepos(installationId: string) {
       try {
         this.isLoading = true
-        const resp = await api.getGithubInstallations()
-        this.githubInstallations = resp
+        const resp = await api.getGithubRepositories({
+          installationId: installationId,
+        })
+        this.githubRepos = resp
         this.isLoading = false
       } catch (err) {
         this.isLoading = false
