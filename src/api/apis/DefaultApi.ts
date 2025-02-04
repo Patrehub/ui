@@ -371,6 +371,33 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * Sync will invite all patrons to the github organization
+     * 
+     */
+    async postSyncRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/sync`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Sync will invite all patrons to the github organization
+     * 
+     */
+    async postSync(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.postSyncRaw(initOverrides);
+    }
+
+    /**
      * Post Webhook
      * 
      */
