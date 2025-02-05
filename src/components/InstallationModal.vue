@@ -1,5 +1,6 @@
 <script setup lang="tsx">
-let { isOpen } = defineProps<{
+let { isOpen, tier } = defineProps<{
+  tier: PatreonReward | null
   isOpen: boolean
   isLoading?: boolean
 }>()
@@ -29,14 +30,24 @@ import {
 import { useGithubInstallationsStore } from '@/stores/githubInstallations'
 import { useGithubReposStore } from '@/stores/githubRepos'
 import { useGitHubTeamsStore } from '@/stores/githubTeams'
+import { useBenefitsStore } from '@/stores/benefits'
 import { computed, onMounted, ref, watch } from 'vue'
-import type { GithubInstallation, GithubRepository, GithubTeam } from '@/api'
+import {
+  PostBenefitRequestTypeEnum,
+  type GithubInstallation,
+  type GithubRepository,
+  type GithubTeam,
+  type PatreonReward,
+  type PostBenefitRequest,
+} from '@/api'
+import { InformationCircleIcon } from '@heroicons/vue/20/solid'
 
 const isLoading = ref(true)
 
 const gitHubStore = useGithubInstallationsStore()
 const githubReposStore = useGithubReposStore()
 const githubTeamsStore = useGitHubTeamsStore()
+const benefitsStore = useBenefitsStore()
 
 const githubInstallations = computed(() => {
   return gitHubStore.getGithubInstallations?.installations ?? []
@@ -74,9 +85,13 @@ const selectedTeam = ref<GithubTeam | null>(null)
 
 watch(selectedInstallation, async value => {
   if (value && inviteType.value === 'contributor') {
+    githubReposLoaded.value = false
+    selectedRepo.value = null
     await githubReposStore.fetchGithubRepos(value.id)
     githubReposLoaded.value = true
   } else if (value && inviteType.value === 'team') {
+    githubTeamsLoaded.value = false
+    selectedTeam.value = null
     await githubTeamsStore.fetchGitHubTeams(value.id)
     githubTeamsLoaded.value = true
   }
@@ -84,20 +99,81 @@ watch(selectedInstallation, async value => {
 
 watch(inviteType, async value => {
   if (value === 'contributor' && selectedInstallation.value) {
+    githubReposLoaded.value = false
+    selectedRepo.value = null
     await githubReposStore.fetchGithubRepos(selectedInstallation.value.id)
     githubReposLoaded.value = true
   } else if (value === 'team' && selectedInstallation.value) {
+    githubTeamsLoaded.value = false
+    selectedTeam.value = null
     await githubTeamsStore.fetchGitHubTeams(selectedInstallation.value.id)
     githubTeamsLoaded.value = true
   }
+
+  formError.value = ''
 })
 
 function closeDialog() {
   emit('update:isOpen', false)
 }
 
-function handleSubmit() {
-  // closeDialog()
+let formError = ref<string>('')
+
+function validate() {
+  if (!selectedInstallation.value?.id) {
+    formError.value = 'Please select an installation'
+    return true
+  }
+
+  if (!tier?.id) {
+    formError.value = 'Error: Tier not found'
+    return true
+  }
+
+  if (inviteType.value === 'contributor' && !selectedRepo.value) {
+    formError.value = 'Please select a repository'
+    return true
+  } else if (inviteType.value === 'team' && !selectedTeam.value) {
+    formError.value = 'Please select a team'
+    return true
+  }
+
+  formError.value = ''
+  return false
+}
+
+const savingBenefit = ref(false)
+
+async function handleSubmit() {
+  // validate
+  if (validate()) {
+    return
+  }
+
+  let type =
+    inviteType.value === 'contributor'
+      ? PostBenefitRequestTypeEnum.Repository
+      : PostBenefitRequestTypeEnum.Team
+
+  let data: PostBenefitRequest = {
+    installationId: parseInt(selectedInstallation.value!.id),
+    tierId: parseInt(tier!.id),
+    type: type,
+    ...(inviteType.value === 'contributor'
+      ? { repository: selectedRepo.value!.fullName }
+      : { teamId: selectedTeam.value!.id }),
+  }
+
+  savingBenefit.value = true
+  let result = await benefitsStore.saveBenefit(data)
+
+  if (result) {
+    savingBenefit.value = false
+    closeDialog()
+  } else {
+    savingBenefit.value = false
+    formError.value = 'Failed to save benefit'
+  }
 }
 </script>
 
@@ -146,7 +222,7 @@ function handleSubmit() {
                   >
                   <div class="mt-2">
                     <p class="text-sm text-zinc-200">
-                      <!-- {{ tier.title }} -->
+                      {{ tier?.title }}
                     </p>
                   </div>
 
@@ -155,7 +231,7 @@ function handleSubmit() {
                       <label>Add supporters as</label>
 
                       <div
-                        class="relative mt-1 flex items-center gap-x-1 rounded-lg border border-zinc-700 bg-zinc-800"
+                        class="relative mt-1 flex items-center gap-x-1 rounded-lg border border-white/5 bg-zinc-800"
                       >
                         <div
                           :class="[
@@ -168,6 +244,7 @@ function handleSubmit() {
                         ></div>
 
                         <button
+                          type="button"
                           @click="setInviteType('contributor')"
                           :class="[
                             {
@@ -181,6 +258,7 @@ function handleSubmit() {
                           Contributor
                         </button>
                         <button
+                          type="button"
                           @click="setInviteType('team')"
                           :class="[
                             {
@@ -203,7 +281,7 @@ function handleSubmit() {
                         >
                         <div class="relative mt-2">
                           <ListboxButton
-                            class="bg-zinc-925 grid w-full grid-cols-1 rounded-md border-b border-t-zinc-950 border-b-zinc-800 py-2 pr-2 pl-3 text-left text-slate-200 inset-shadow-sm inset-shadow-zinc-950/60 transition"
+                            class="bg-zinc-925 grid w-full grid-cols-1 rounded-lg border-b border-t-zinc-950 border-b-zinc-800 py-2 pr-2 pl-3 text-left text-slate-200 inset-shadow-sm inset-shadow-zinc-950/60 transition"
                           >
                             <span
                               v-if="selectedInstallation"
@@ -313,7 +391,7 @@ function handleSubmit() {
                         >
                         <div class="relative mt-2">
                           <ListboxButton
-                            class="bg-zinc-925 grid w-full cursor-default grid-cols-1 rounded-md border-b border-t-zinc-950 border-b-zinc-800 py-2 pr-2 pl-3 text-left text-slate-200 inset-shadow-sm inset-shadow-zinc-950/60 transition"
+                            class="bg-zinc-925 grid w-full cursor-default grid-cols-1 rounded-lg border-b border-t-zinc-950 border-b-zinc-800 py-2 pr-2 pl-3 text-left text-slate-200 inset-shadow-sm inset-shadow-zinc-950/60 transition"
                           >
                             <span
                               v-if="selectedRepo"
@@ -450,17 +528,33 @@ function handleSubmit() {
                     <!-- TEAMS -->
                     <!-- TEAMS -->
                     <div>
+                      <div
+                        v-if="
+                          selectedInstallation &&
+                          inviteType === 'team' &&
+                          selectedInstallation.account.type === 'User'
+                        "
+                        class="flex items-center gap-x-1.5 rounded-full border-y border-t-white/5 border-b-zinc-950/20 bg-red-300/5 px-2 py-1 text-sm text-red-200 shadow"
+                      >
+                        <InformationCircleIcon class="size-4" />
+                        Installation must be an Organization
+                      </div>
+
                       <Listbox
                         as="div"
                         v-model="selectedTeam"
-                        v-if="selectedInstallation && inviteType === 'team'"
+                        v-if="
+                          selectedInstallation &&
+                          inviteType === 'team' &&
+                          selectedInstallation.account.type === 'Organization'
+                        "
                       >
                         <ListboxLabel class="text-sm text-zinc-200"
                           >Select Team</ListboxLabel
                         >
                         <div class="relative mt-2">
                           <ListboxButton
-                            class="bg-zinc-925 grid w-full cursor-default grid-cols-1 rounded-md border-b border-t-zinc-950 border-b-zinc-800 py-2 pr-2 pl-3 text-left text-slate-200 inset-shadow-sm inset-shadow-zinc-950/60 transition"
+                            class="bg-zinc-925 grid w-full cursor-default grid-cols-1 rounded-lg border-b border-t-zinc-950 border-b-zinc-800 py-2 pr-2 pl-3 text-left text-slate-200 inset-shadow-sm inset-shadow-zinc-950/60 transition"
                           >
                             <span
                               v-if="selectedTeam"
@@ -595,21 +689,50 @@ function handleSubmit() {
                         </div>
                       </Listbox>
                     </div>
+                    <div
+                      v-if="formError.length > 0"
+                      class="flex items-center gap-x-1.5 rounded-full border-y border-t-white/5 border-b-zinc-950/20 bg-red-300/5 px-2 py-1 text-sm text-red-200 shadow"
+                    >
+                      <InformationCircleIcon class="size-4" />
+                      {{ formError }}
+                    </div>
                   </div>
                 </div>
                 <div class="mt-5 flex items-center justify-between sm:mt-6">
                   <button
-                    class="ring-zinc-925 flex cursor-pointer items-center gap-x-1 rounded-lg border border-white/5 border-t-white/10 bg-zinc-800 px-3 py-1 text-sm tracking-wide text-zinc-200 ring inset-shadow-transparent transition hover:bg-zinc-700/40 active:bg-zinc-800 active:inset-shadow-xs active:inset-shadow-black/50"
+                    class="flex cursor-pointer items-center gap-x-1 rounded-lg border-t border-t-white/5 bg-white/5 px-3 py-1 text-sm tracking-wide text-zinc-200 shadow inset-shadow-transparent transition hover:bg-white/7 active:bg-zinc-800 active:inset-shadow-xs active:inset-shadow-black/50"
                     @click="closeDialog"
+                    type="button"
                   >
                     Back
                   </button>
 
                   <button
-                    class="flex cursor-pointer items-center gap-x-1 rounded-[7px] border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide text-blue-50 inset-shadow-sm ring-1 ring-zinc-950 transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.35)] hover:border-t-blue-300 hover:from-blue-500 hover:to-blue-700 hover:text-white active:border-t-blue-950 active:from-blue-800 active:to-blue-800 active:inset-shadow-black/50"
+                    class="flex cursor-pointer items-center gap-x-1.5 rounded-[7px] border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide text-blue-50 inset-shadow-sm ring-1 ring-zinc-950 transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.35)] hover:border-t-blue-300 hover:from-blue-500 hover:to-blue-700 hover:text-white active:border-t-blue-950 active:from-blue-800 active:to-blue-800 active:inset-shadow-black/50"
                     type="submit"
                   >
-                    Save
+                    <svg
+                      class="size-4 animate-spin text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      v-if="savingBenefit"
+                    >
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                      ></circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    {{ savingBenefit ? 'Adding...' : 'Add Benefit' }}
                   </button>
                 </div>
               </form>

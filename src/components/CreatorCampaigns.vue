@@ -5,16 +5,24 @@ import { PlusIcon } from '@heroicons/vue/16/solid'
 
 import InstallationModal from './InstallationModal.vue'
 import { usePatreonProfileStore } from '@/stores'
+import { useBenefitsStore } from '@/stores/benefits'
+import type { PatreonReward } from '@/api'
 
 const store = usePatreonProfileStore()
+const benefitsStore = useBenefitsStore()
+
 const patreonProfile = computed(() => {
   return store.getPatreonProfile
+})
+
+const benefits = computed(() => {
+  return benefitsStore.getBenefits
 })
 
 const isLoading = ref(true)
 
 const isOpen = ref(false)
-const tier = ref<any>(null)
+const tier = ref<PatreonReward | null>(null)
 
 function setTier(newTier: any) {
   tier.value = newTier
@@ -34,6 +42,8 @@ onMounted(async () => {
     isLoading.value = false
     await store.fetchPatreonProfile()
   }
+
+  await benefitsStore.fetchBenefits()
 })
 
 function cleanSummary(summary: string) {
@@ -115,7 +125,7 @@ function centsToDollars(cents: number) {
         >
           <div
             v-for="(tier, i) in patreonProfile?.campaign.rewards"
-            class="rounded-xl border-y border-zinc-700/50 border-t-zinc-700 border-b-zinc-900 bg-linear-to-b from-zinc-800 to-zinc-900 p-4 inset-shadow-sm ring ring-zinc-950 inset-shadow-zinc-700/60"
+            class="rounded-2xl border-y border-zinc-700/50 border-t-zinc-700 border-b-zinc-900 bg-linear-to-b from-zinc-800 to-zinc-900 p-4 inset-shadow-sm ring ring-zinc-950 inset-shadow-zinc-700/60"
           >
             <p class="text-base font-medium tracking-wider text-zinc-200">
               {{ tier.title }}
@@ -144,7 +154,7 @@ function centsToDollars(cents: number) {
               </p>
 
               <button
-                class="ring-zinc-925 flex cursor-pointer items-center gap-x-0.5 rounded-lg border border-white/5 border-t-white/10 bg-zinc-800 p-0.5 px-2 text-sm tracking-wide ring inset-shadow-transparent transition hover:bg-zinc-700/40 active:bg-zinc-800 active:inset-shadow-xs active:inset-shadow-black/50"
+                class="ring-zinc-925 flex cursor-pointer items-center gap-x-0.5 rounded-lg border-t border-t-white/6 bg-white/5 p-0.5 px-2 text-sm tracking-wide shadow inset-shadow-transparent transition hover:bg-zinc-700/40 active:bg-zinc-800 active:inset-shadow-xs active:inset-shadow-black/50"
                 @click="setTier(tier)"
               >
                 <PlusIcon class="size-4 text-zinc-200" />
@@ -178,5 +188,5 @@ function centsToDollars(cents: number) {
   </div>
 
   <!-- TODO: NEED PASS DOWN TIER -->
-  <InstallationModal v-model:isOpen="isOpen" />
+  <InstallationModal :tier="tier" v-model:isOpen="isOpen" />
 </template>
