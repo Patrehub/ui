@@ -113,6 +113,18 @@ watch(inviteType, async value => {
   formError.value = ''
 })
 
+// watch isOpen and reset values
+watch(
+  () => isOpen,
+  value => {
+    selectedInstallation.value = null
+    selectedRepo.value = null
+    selectedTeam.value = null
+    inviteType.value = 'contributor'
+    formError.value = ''
+  },
+)
+
 function closeDialog() {
   emit('update:isOpen', false)
 }
@@ -170,6 +182,7 @@ async function handleSubmit() {
   if (result) {
     savingBenefit.value = false
     closeDialog()
+    await benefitsStore.fetchBenefits()
   } else {
     savingBenefit.value = false
     formError.value = 'Failed to save benefit'
@@ -206,7 +219,7 @@ async function handleSubmit() {
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <DialogPanel
-              class="border-b-zinc-925 relative transform rounded-2xl border-y border-t-zinc-700 bg-zinc-900 px-4 pt-5 pb-4 text-left inset-shadow-sm ring shadow-xl shadow-zinc-950 ring-zinc-950 inset-shadow-zinc-800 transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+              class="relative transform rounded-2xl border-y border-t-white/15 border-b-zinc-950/20 bg-zinc-900 px-4 pt-5 pb-4 text-left inset-shadow-sm ring shadow-xl shadow-zinc-950 ring-zinc-950 inset-shadow-zinc-800 transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
             >
               <form @submit.prevent="handleSubmit">
                 <div

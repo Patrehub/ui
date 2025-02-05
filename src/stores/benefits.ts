@@ -69,5 +69,26 @@ export const useBenefitsStore = defineStore({
         console.log(err)
       }
     },
+
+    async deleteBenefit(id: string) {
+      try {
+        this.isLoading = true
+        await api.deleteBenefit({
+          id: id,
+        })
+        this.isLoading = false
+      } catch (err) {
+        this.isLoading = false
+
+        if (err instanceof ResponseError) {
+          alert(err.response.body)
+          console.log(err.response.body)
+          return
+        }
+
+        alert(err)
+        console.log(err)
+      }
+    },
   },
 })
