@@ -45,10 +45,10 @@ export interface PostBenefitRequest {
     teamId?: number;
     /**
      * The unique identifier for the repository.
-     * @type {number}
+     * @type {string}
      * @memberof PostBenefitRequest
      */
-    repository?: number;
+    repository?: string;
 }
 
 
