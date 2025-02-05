@@ -22,6 +22,7 @@ import type {
   GithubRepository,
   GithubTeam,
   PatreonUser,
+  PostBenefitRequest,
   Webhook,
 } from '../models/index';
 import {
@@ -39,6 +40,8 @@ import {
     GithubTeamToJSON,
     PatreonUserFromJSON,
     PatreonUserToJSON,
+    PostBenefitRequestFromJSON,
+    PostBenefitRequestToJSON,
     WebhookFromJSON,
     WebhookToJSON,
 } from '../models/index';
@@ -57,6 +60,10 @@ export interface GetGithubRepositoriesRequest {
 
 export interface GetGithubTeamsRequest {
     installationId: string;
+}
+
+export interface PostBenefitOperationRequest {
+    postBenefitRequest?: PostBenefitRequest;
 }
 
 /**
@@ -346,16 +353,19 @@ export class DefaultApi extends runtime.BaseAPI {
      * Post Benefit
      * 
      */
-    async postBenefitRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Benefit>> {
+    async postBenefitRaw(requestParameters: PostBenefitOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Benefit>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
             path: `/benefits`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
+            body: PostBenefitRequestToJSON(requestParameters['postBenefitRequest']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => BenefitFromJSON(jsonValue));
@@ -365,8 +375,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * Post Benefit
      * 
      */
-    async postBenefit(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Benefit> {
-        const response = await this.postBenefitRaw(initOverrides);
+    async postBenefit(requestParameters: PostBenefitOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Benefit> {
+        const response = await this.postBenefitRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
