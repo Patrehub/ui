@@ -70,7 +70,9 @@ const authStore = useAuthStore()
                       class="flex cursor-pointer items-center rounded-[7px] border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide text-blue-50 inset-shadow-sm ring-1 ring-zinc-950 transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.35)] hover:border-t-blue-300 hover:from-blue-500 hover:to-blue-700 hover:text-white active:border-t-blue-950 active:from-blue-800 active:to-blue-800 active:inset-shadow-black/50"
                       @click="store.connect()"
                     >
-                      Connect GitHub
+                      {{
+                        store.isConnecting ? 'Connecting...' : 'Connect GitHub'
+                      }}
                     </button>
                   </div>
                   <div

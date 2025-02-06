@@ -1,13 +1,49 @@
 import { defineStore } from 'pinia'
 import router from '@/router'
 
+import {
+  Configuration,
+  DefaultApi,
+  ResponseError,
+  type GithubAccount,
+} from '@/api'
+
+const config: Configuration = new Configuration({
+  credentials: 'include',
+})
+const api = new DefaultApi(config)
+
 export const useGitHubStore = defineStore({
   id: 'github',
   state: () => ({
     returnUrl: null,
-    is_connecting: false,
+    isConnecting: false,
+    isLoading: false,
+    githubProfile: null as GithubAccount | null,
+    error: false,
   }),
   actions: {
+    async fetchGitHubProfile() {
+      try {
+        this.isLoading = true
+        const resp = await api.getGithubProfile()
+        this.githubProfile = resp
+        this.isLoading = false
+      } catch (err) {
+        this.isLoading = false
+        this.error = true
+
+        if (err instanceof ResponseError) {
+          // alert(err.response.body)
+          console.log(err.response.body)
+          return
+        }
+
+        // alert(err)
+        console.log(err)
+      }
+    },
+
     async connect() {
       const wwwUrl = import.meta.env.VITE_WWW_URL ?? 'https://www.patrehub.com'
       const apiUrl = import.meta.env.VITE_API_URL ?? 'https://api.patrehub.com'
@@ -22,7 +58,7 @@ export const useGitHubStore = defineStore({
       }
 
       try {
-        this.is_connecting = true
+        this.isConnecting = true
         const response = await fetch(`${apiUrl}${urlPath}`, opts)
         if (response.ok) {
           const { url } = await response.json()
@@ -36,7 +72,7 @@ export const useGitHubStore = defineStore({
         console.error(error)
         router.push('/error?message=Failed to connect to GitHub')
       } finally {
-        this.is_connecting = false
+        this.isConnecting = false
       }
     },
     disconnect() {

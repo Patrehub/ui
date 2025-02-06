@@ -2,17 +2,18 @@
 import CreatorCampaigns from '@/components/CreatorCampaigns.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 
-import { usePatreonProfileStore } from '@/stores'
+import { useGitHubStore, usePatreonProfileStore } from '@/stores'
 import { useBenefitsStore } from '@/stores/benefits'
 import type { Benefit, PatreonReward } from '@/api'
 
-import { PlusIcon } from '@heroicons/vue/16/solid'
+import { PlusIcon, UserGroupIcon, UserIcon } from '@heroicons/vue/16/solid'
 
 import InstallationModal from '../components/InstallationModal.vue'
-import { TrashIcon } from '@heroicons/vue/24/outline'
-import { ExclamationCircleIcon } from '@heroicons/vue/16/solid'
+import { ExclamationTriangleIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import { useGithubInstallationsStore } from '@/stores/githubInstallations'
 
 const isLoading = ref(true)
+const githubStore = useGitHubStore()
 
 const store = usePatreonProfileStore()
 const patreonProfile = computed(() => {
@@ -23,6 +24,8 @@ const benefitsStore = useBenefitsStore()
 const benefits = computed(() => {
   return benefitsStore.getBenefits
 })
+
+const gitHubStore = useGitHubStore()
 
 type BenefitRecord = {
   [key: string]: [Benefit]
@@ -44,6 +47,7 @@ onMounted(async () => {
   isLoading.value = true
   await benefitsStore.fetchBenefits()
   isLoading.value = false
+  await githubStore.fetchGitHubProfile()
 })
 
 watch(benefits, () => {
@@ -107,6 +111,47 @@ function centsToDollars(cents: number) {
               <CreatorCampaigns />
             </div>
 
+            <div
+              v-if="githubStore.error"
+              class="relative mt-4 flex flex-col items-center overflow-clip rounded-xl border-y border-t-white/5 border-b-zinc-950/30 bg-radial-[at_50%_100%_in_oklch] from-blue-600/10 to-blue-300/4 px-4 py-6 shadow"
+            >
+              <div
+                class="absolute top-0 left-0 h-full w-full"
+                :style="{
+                  backgroundColor: 'transparent',
+                  backgroundImage:
+                    'radial-gradient(rgba(26, 61, 186, 0.3) 1px, transparent 1px)',
+                  backgroundSize: '4px 4px',
+                  maskImage:
+                    'radial-gradient(ellipse at 50% 100%, black 10%, transparent 70%)',
+                }"
+              ></div>
+
+              <div class="relative text-center">
+                <ExclamationTriangleIcon class="mx-auto size-8 text-blue-100" />
+
+                <h2
+                  class="mx-auto mt-1 w-fit font-medium text-blue-100 [text-shadow:_0px_0px_3px_black;]"
+                >
+                  GitHub Auth Missing
+                </h2>
+                <p
+                  class="mx-auto mt-0.5 w-fit text-sm text-blue-200 [text-shadow:_0px_0px_3px_black;]"
+                >
+                  You need to connect your GitHub account
+                </p>
+              </div>
+
+              <button
+                class="relative mt-4 flex cursor-pointer items-center rounded-[7px] border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide text-blue-50 inset-shadow-sm ring-1 ring-zinc-950 transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.35)] hover:border-t-blue-300 hover:from-blue-500 hover:to-blue-700 hover:text-white active:border-t-blue-950 active:from-blue-800 active:to-blue-800 active:inset-shadow-black/50"
+                @click="githubStore.connect()"
+              >
+                {{
+                  githubStore.isConnecting ? 'Connecting...' : 'Connect GitHub'
+                }}
+              </button>
+            </div>
+
             <div class="mt-12">
               <div class="flex items-center justify-between">
                 <div>
@@ -120,7 +165,13 @@ function centsToDollars(cents: number) {
                   </p>
                 </div>
 
-                <div>
+                <div class="flex items-center gap-x-3">
+                  <a
+                    href="https://github.com/apps/Patrehub/installations/new"
+                    class="flex cursor-pointer items-center rounded-[7px] border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide text-blue-50 inset-shadow-sm ring-1 ring-zinc-950 transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.35)] hover:border-t-blue-300 hover:from-blue-500 hover:to-blue-700 hover:text-white active:border-t-blue-950 active:from-blue-800 active:to-blue-800 active:inset-shadow-black/50"
+                  >
+                    Webhooks
+                  </a>
                   <a
                     href="https://github.com/apps/Patrehub/installations/new"
                     class="flex cursor-pointer items-center rounded-[7px] border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide text-blue-50 inset-shadow-sm ring-1 ring-zinc-950 transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.35)] hover:border-t-blue-300 hover:from-blue-500 hover:to-blue-700 hover:text-white active:border-t-blue-950 active:from-blue-800 active:to-blue-800 active:inset-shadow-black/50"
@@ -205,9 +256,14 @@ function centsToDollars(cents: number) {
                         >
                           <div class="flex items-center gap-x-2">
                             <div class="my-1 ml-1">
-                              <img
-                                src="/github.svg"
-                                class="size-5.5 rounded-full bg-linear-to-b from-zinc-500 to-zinc-700 p-1 shadow"
+                              <UserIcon
+                                v-if="bene.type !== 'team'"
+                                class="size-5.5 rounded-full bg-linear-to-b from-zinc-500 to-zinc-700 p-1 text-white shadow"
+                              />
+
+                              <UserGroupIcon
+                                v-if="bene.type === 'team'"
+                                class="size-5.5 rounded-full bg-linear-to-b from-zinc-500 to-zinc-700 p-1 text-white shadow"
                               />
                             </div>
                             <p

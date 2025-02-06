@@ -16,6 +16,7 @@ export const useGithubInstallationsStore = defineStore({
   state: () => ({
     githubInstallations: null as GetGithubInstallationsResponse | null,
     isLoading: false,
+    error: false,
   }),
   getters: {
     getGithubInstallations(state) {
@@ -31,15 +32,16 @@ export const useGithubInstallationsStore = defineStore({
         this.isLoading = false
       } catch (err) {
         this.isLoading = false
+        this.error = true
 
         if (err instanceof ResponseError) {
-          alert(err.response.body)
+          // alert(err.response.body)
           console.log(err.response.body)
           return
         }
 
         alert(err)
-        console.log(err)
+        // console.log(err)
       }
     },
   },

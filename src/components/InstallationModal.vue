@@ -132,6 +132,11 @@ function closeDialog() {
 let formError = ref<string>('')
 
 function validate() {
+  if (gitHubStore.error) {
+    formError.value = 'You must connect your GitHub account'
+    return true
+  }
+
   if (!selectedInstallation.value?.id) {
     formError.value = 'Please select an installation'
     return true
