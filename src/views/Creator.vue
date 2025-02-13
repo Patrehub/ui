@@ -9,8 +9,9 @@ import type { Benefit, PatreonReward } from '@/api'
 import { PlusIcon, UserGroupIcon, UserIcon } from '@heroicons/vue/16/solid'
 
 import InstallationModal from '../components/InstallationModal.vue'
+import WebhooksModal from '../components/WebhooksModal.vue'
 import { ExclamationTriangleIcon, TrashIcon } from '@heroicons/vue/24/outline'
-import { useGithubInstallationsStore } from '@/stores/githubInstallations'
+import SyncModal from '@/components/SyncModal.vue'
 
 const isLoading = ref(true)
 const githubStore = useGitHubStore()
@@ -25,14 +26,23 @@ const benefits = computed(() => {
   return benefitsStore.getBenefits
 })
 
-const gitHubStore = useGitHubStore()
-
 type BenefitRecord = {
   [key: string]: [Benefit]
 }
 const sortedBenefits = ref<BenefitRecord>({})
 
 const isOpen = ref(false)
+const webhookOpen = ref(false)
+const syncOpen = ref(false)
+
+function setWebhookOpen(value: boolean) {
+  webhookOpen.value = value
+}
+
+function setSyncOpen(value: boolean) {
+  syncOpen.value = value
+}
+
 function setIsOpen(value: boolean) {
   isOpen.value = value
 }
@@ -166,12 +176,20 @@ function centsToDollars(cents: number) {
                 </div>
 
                 <div class="flex items-center gap-x-3">
-                  <a
+                  <button
+                    href="https://github.com/apps/Patrehub/installations/new"
+                    class="flex cursor-pointer items-center rounded-[7px] border-t border-t-amber-400 bg-linear-to-b/oklch from-amber-600 to-amber-800 px-3 py-1 text-sm font-medium tracking-wide text-amber-50 inset-shadow-sm ring-1 ring-zinc-950 transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.35)] hover:border-t-amber-300 hover:from-amber-500 hover:to-amber-700 hover:text-white active:border-t-amber-950 active:from-amber-800 active:to-amber-800 active:inset-shadow-black/50"
+                    @click="setSyncOpen(true)"
+                  >
+                    Sync
+                  </button>
+                  <button
                     href="https://github.com/apps/Patrehub/installations/new"
                     class="flex cursor-pointer items-center rounded-[7px] border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide text-blue-50 inset-shadow-sm ring-1 ring-zinc-950 transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.35)] hover:border-t-blue-300 hover:from-blue-500 hover:to-blue-700 hover:text-white active:border-t-blue-950 active:from-blue-800 active:to-blue-800 active:inset-shadow-black/50"
+                    @click="setWebhookOpen(true)"
                   >
                     Webhooks
-                  </a>
+                  </button>
                   <a
                     href="https://github.com/apps/Patrehub/installations/new"
                     class="flex cursor-pointer items-center rounded-[7px] border-t border-t-blue-400 bg-linear-to-b/oklch from-blue-600 to-blue-800 px-3 py-1 text-sm font-medium tracking-wide text-blue-50 inset-shadow-sm ring-1 ring-zinc-950 transition [text-shadow:_0px_2px_2px_rgba(0,0,0,0.35)] hover:border-t-blue-300 hover:from-blue-500 hover:to-blue-700 hover:text-white active:border-t-blue-950 active:from-blue-800 active:to-blue-800 active:inset-shadow-black/50"
@@ -317,6 +335,8 @@ function centsToDollars(cents: number) {
       </div>
     </div>
 
+    <WebhooksModal v-model:isOpen="webhookOpen" />
+    <SyncModal v-model:isOpen="syncOpen" />
     <InstallationModal :tier="tier" v-model:isOpen="isOpen" />
   </main>
 </template>
