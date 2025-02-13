@@ -78,11 +78,11 @@ async function handleSync() {
                   >
                   <div class="">
                     <p class="text-sm text-zinc-300">
-                      Invite to all eligible users based on your configured
+                      Invite to all eligible supporters based on your configured
                       benefits.
                     </p>
                     <p class="mt-4 text-sm text-zinc-300">
-                      Are you sure you want to sync all eligible users?
+                      Are you sure you want to sync all eligible supporters?
                     </p>
                   </div>
                 </div>
